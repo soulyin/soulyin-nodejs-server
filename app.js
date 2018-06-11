@@ -52,15 +52,6 @@ app.use(vertifyWxSession());
 // 路由
 app.use('/', require('./router/router'));
 
-// // 获取歌词
-// app.use('/lyric', require('./router/lyric'));
-
-// // 获取音乐 url
-// app.use('/music/url', require('./router/musicUrl'));
-
-// // 搜索
-// app.use('/search', require('./router/search'));
-
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
