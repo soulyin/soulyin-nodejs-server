@@ -1,3 +1,7 @@
+/**
+ * 验证微信登录的 session
+ */
+
 const DB = require('../db');
 const res = require('./res');
 

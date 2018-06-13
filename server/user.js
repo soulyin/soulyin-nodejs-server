@@ -38,6 +38,20 @@ async function getSessionKey(code, appid, appSecret) {
   }
 }
 
+userServer['/sy/web/register'] = async function(req, res) {
+  const { username, password } = req.body;
+
+  try {
+    const userInfo = await DB.instance('w').insert('users', {
+      username,
+      password
+    });
+    return userInfo;
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
 userServer['/wx/login'] = async function(req, res) {
   const { code } = req.query;
   const { skey, openid } = await getSessionKey(
@@ -54,7 +68,8 @@ userServer['/wx/login'] = async function(req, res) {
         result = await DB.instance('w').insert('users', {
           wx_skey: skey,
           openid,
-          username: 'soulyin' + minim.unix()
+          username: 'soulyin' + minim.unix(),
+          password: '123456'
         });
         // 登录
       } else {
@@ -105,6 +120,30 @@ userServer['/wx/update-user-info'] = async function(req, res) {
       }
     );
     return result;
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
+userServer['/sy/web/login'] = async function(req, res) {
+  const { username, password } = req.body;
+  console.log(req.session)
+  try {
+    const userInfo = await DB.instance('r').findOne('users', {
+      username,
+      password
+    });
+    if (userInfo.length === 0) {
+      throw new Error('用户名或密码错误');
+    } else {
+      req.session.regenerate(function(err, ) {
+        if (err) {
+          throw new Error(err.message);
+        }
+        delete userInfo[0].password;
+        req.session.loginUser = userInfo[0].username;
+      });
+    }
   } catch (err) {
     throw new Error(err.message);
   }

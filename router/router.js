@@ -4,10 +4,17 @@ const router = express();
 const userController = require('../controller/user');
 const songController = require('../controller/song');
 
+// 用户注册（网页）
+router.post('/sy/web/register', (req, res) => {
+  userController[req.path](req, res);
+});
+
 // 微信登录
 router.get('/wx/login', (req, res) => {
   userController[req.path](req, res);
 });
+
+
 
 // 更新微信用户信息
 router.post('/wx/update-user-info', async (req, res) => {

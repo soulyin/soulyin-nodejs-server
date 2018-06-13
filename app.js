@@ -5,7 +5,12 @@ const helmet = require('helmet');
 const res = require('./middleware/res');
 const bodyParser = require('body-parser');
 const vertifyWxSession = require('./middleware/verifyWxSession');
+const vertifyWebSession = require('./middleware/vertifyWebSession');
 const session = require('express-session');
+const mysql = require('mysql');
+const MySQLStore = require('express-mysql-session')(session);
+
+const userController = require('./controller/user');
 
 const app = express();
 let cache = apicache.middleware;
@@ -33,7 +38,7 @@ app.all('*', function(req, res, next) {
 
 const onlyStatus200 = (req, res) => res.statusCode === 200;
 
-app.use(cache('2 minutes', onlyStatus200));
+// app.use(cache('2 minutes', onlyStatus200));
 
 app.use(express.static(path.resolve(__dirname, 'public')));
 
@@ -46,8 +51,35 @@ app.use(function(req, res, next) {
   next();
 });
 
+const options = {
+  host: '122.152.227.45',
+  port: '3306',
+  user: 'root',
+  password: 'souyin2018@2018',
+  database: 'soulyin_test'
+};
+
+const sessionStore = new MySQLStore(options);
+app.use(
+  session({
+    key: 'session_cookie_name',
+    secret: 'session_cookie_secret',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: true
+  })
+);
+
+// 用户名登录（网页）
+app.post('/sy/web/login', (req, res) => {
+  userController[req.path](req, res);
+});
+
 // 验证微信 session
 app.use(vertifyWxSession());
+
+// 验证网页端 session
+app.use(vertifyWebSession(sessionStore));
 
 // 路由
 app.use('/', require('./router/router'));
