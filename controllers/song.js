@@ -1,14 +1,13 @@
-const secret = require('../config/secret');
-const DB = require('../db');
-const rp = require('request-promise');
-const crypto = require('crypto');
-const minim = require('../util/minim');
+/**
+ * users controller
+ */
 
+const express = require('express');
+const router = express.Router();
 const { createWebAPIRequest } = require('../util/util');
 
-const songServer = {};
-
-songServer['/song/lyric'] = async function(req, res) {
+// 获取歌词
+router.get('/lyric', async (req, res) => {
   const cookie = req.get('Cookie') ? req.get('Cookie') : '';
   const data = {};
   const id = req.query.id;
@@ -20,13 +19,14 @@ songServer['/song/lyric'] = async function(req, res) {
       data,
       cookie
     );
-    return lyric;
+    res.resSuccess(lyric, '获取歌词成功');
   } catch (err) {
-    throw new Error(err.message);
+    res.resError(err);
   }
-};
+});
 
-songServer['/song/music/url'] = async function(req, res) {
+// 获取歌曲url
+router.get('/music/url', async (req, res) => {
   const id = req.query.id;
   const br = req.query.br || 999000;
   const data = {
@@ -43,13 +43,13 @@ songServer['/song/music/url'] = async function(req, res) {
       data,
       cookie
     );
-    return songUrl;
+    res.resSuccess(songUrl, '获取歌曲地址成功');
   } catch (err) {
-    throw new Error(err.message);
+    res.resError(err);
   }
-};
-
-songServer['/song/search'] = async function(req, res) {
+});
+// 搜索歌曲
+router.get('/search', async (req, res) => {
   const cookie = req.get('Cookie') ? req.get('Cookie') : '';
   const keywords = req.query.keywords;
   const type = req.query.type || 1;
@@ -71,10 +71,10 @@ songServer['/song/search'] = async function(req, res) {
       data,
       cookie
     );
-    return list;
+    res.resSuccess(list, '搜索歌曲成功');
   } catch (err) {
-    throw new Error(err.message);
+    res.resError(err);
   }
-};
+});
 
-module.exports = songServer;
+module.exports = router;

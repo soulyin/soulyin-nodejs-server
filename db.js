@@ -49,11 +49,15 @@ class DB {
    * @param {Array} values sql中？占位符对应的数据
    * @return Promise result|rows
    */
-  query(sql, values) {
-    return this.queryWithOptions({
-      sql: sql,
-      values: values
-    });
+  async query(sql, values) {
+    try {
+      return await this.queryWithOptions({
+        sql,
+        values
+      });
+    } catch (err) {
+      throw err;
+    }
   }
   findOne(tableName, where) {
     const sql = `select * from ${tableName} ${DB.buildConditions(where)}`;
@@ -393,19 +397,13 @@ class DB {
    * @param {Object} data 插入的数据，如：{ name: 'Tom', age: 19 }
    * @return Promese result 插入的结果，成功则有insertId属性
    */
-  insert(tbname, data) {
-    const that = this;
-    return new Promise((resolve, reject) => {
-      const sql = 'INSERT INTO `' + tbname + '` SET ? ';
-      that
-        .query(sql, data)
-        .then(result => {
-          resolve(result);
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
+  async insert(tbname, data) {
+    const sql = 'INSERT INTO `' + tbname + '` SET ? ';
+    try {
+      return await this.query(sql, data);
+    } catch (err) {
+      throw err;
+    }
   }
   /**
    * 删除某个条件下的一条记录

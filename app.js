@@ -4,13 +4,12 @@ const path = require('path');
 const helmet = require('helmet');
 const res = require('./middleware/res');
 const bodyParser = require('body-parser');
-const vertifyWxSession = require('./middleware/verifyWxSession');
-const vertifyWebSession = require('./middleware/vertifyWebSession');
+const authWx = require('./middleware/authWx');
+const authWeb = require('./middleware/authWeb');
 const session = require('express-session');
 const mysql = require('mysql');
 const MySQLStore = require('express-mysql-session')(session);
 
-const userController = require('./controller/user');
 
 const app = express();
 let cache = apicache.middleware;
@@ -70,19 +69,17 @@ app.use(
   })
 );
 
-// 用户名登录（网页）
-app.post('/sy/web/login', (req, res) => {
-  userController[req.path](req, res);
-});
+// 歌曲相关路由
+app.use('/song', require('./controllers/song'));
 
 // 验证微信 session
-app.use(vertifyWxSession());
+app.use(authWx());
 
 // 验证网页端 session
-app.use(vertifyWebSession(sessionStore));
+app.use(authWeb(sessionStore));
 
-// 路由
-app.use('/', require('./router/router'));
+// 用户相关路由
+app.use('/sy', require('./controllers/users'));
 
 const port = process.env.PORT || 3000;
 

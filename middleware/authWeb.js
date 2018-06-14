@@ -7,13 +7,18 @@ const res = require('./res');
 
 module.exports = function(sessionStore) {
   return async function(req, res, next) {
+    if (req.path.indexOf('/wx') !== -1) {
+      return next();
+    }
     const sid = req.session.id;
     sessionStore.get(sid, (err, session) => {
       if (err) {
-        console.log(err);
-        return;
+        return res.resError(err);
       }
-      var a = session;
+      if (!session) {
+        return res.resError('无权限访问');
+      }
+      next();
     });
   };
 };
