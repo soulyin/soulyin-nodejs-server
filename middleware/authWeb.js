@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * 验证 web 端的 session
  */

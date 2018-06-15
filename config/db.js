@@ -1,3 +1,5 @@
+'use strict';
+
 const dbconfig = {
   r: {
     host: '122.152.227.45',

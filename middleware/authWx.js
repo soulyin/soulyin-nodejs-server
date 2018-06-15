@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * 验证微信登录的 session
  */

@@ -1,3 +1,5 @@
+'use strict';
+
 const Encrypt = require('./crypto.js');
 const request = require('request');
 const rp = require('request-promise');

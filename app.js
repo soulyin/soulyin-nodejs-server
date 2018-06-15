@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const apicache = require('apicache');
 const path = require('path');
@@ -58,6 +60,7 @@ const options = {
   database: 'soulyin_test'
 };
 
+// session
 const sessionStore = new MySQLStore(options);
 app.use(
   session({

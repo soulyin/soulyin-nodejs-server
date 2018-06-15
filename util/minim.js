@@ -1,3 +1,5 @@
+'use strict';
+
 class MiniM {
   constructor(date) {
     this.date = date || new Date();
