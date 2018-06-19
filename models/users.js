@@ -111,3 +111,15 @@ exports.updateWxUserInfo = async userInfo => {
     throw err;
   }
 };
+
+// 获取用户的信息 by id
+exports.getUserInfoById = async id => {
+  try {
+    const result = await DB.instance('r').findOne('users', {
+      id
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};

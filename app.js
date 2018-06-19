@@ -60,7 +60,8 @@ const options = {
   password: 'souyin2018@2018',
   database: 'soulyin_test'
 };
-const sessionStore = new MySQLStore(options);
+const connection = mysql.createConnection(options);
+const sessionStore = new MySQLStore({}, connection);
 app.use(
   session({
     key: 'session_cookie_name',
@@ -78,7 +79,7 @@ app.use('/song', require('./controllers/song'));
 app.use(authWx());
 
 // 验证 app 端的 token
-app.use(authWeb(authApp.init));
+app.use(authApp.init);
 
 // 验证网页端 session
 app.use(authWeb(sessionStore));

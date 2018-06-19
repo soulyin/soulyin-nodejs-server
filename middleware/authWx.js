@@ -35,7 +35,7 @@ module.exports = function() {
       }
       // 非微信登录
     } else {
-      next();
+      return next();
     }
   };
 };

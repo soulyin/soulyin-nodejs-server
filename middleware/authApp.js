@@ -26,7 +26,7 @@ const authApp = {
         delete req._authInfo;
       }
     }
-    next();
+    return next();
   },
   /**
    * 生成授权令牌

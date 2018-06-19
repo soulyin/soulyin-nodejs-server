@@ -8,7 +8,7 @@ const DB = require('../db');
 const res = require('./res');
 
 module.exports = function(sessionStore) {
-  return async function(req, res, next) {
+  return function(req, res, next) {
     if (req.path.indexOf('login') !== -1) {
       return next();
     }
@@ -17,7 +17,7 @@ module.exports = function(sessionStore) {
       if (err) {
         return res.resError(err);
       }
-      if (session) {
+      if (session && session.loginUser) {
         req.sid = sid;
       }
       next();
