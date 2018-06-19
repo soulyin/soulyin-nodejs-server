@@ -153,4 +153,25 @@ router.post('/wx/update-user-info', async (req, res) => {
   }
 });
 
+// 获取用户信息
+router.get('/get-userinfo', async (req, res) => {
+  const {  } = req.body;
+  const openid = req.openid;
+  try {
+    const result = await UsersModel.updateWxUserInfo({
+      wx_avatar_url: avatarUrl,
+      wx_city: city,
+      wx_country: country,
+      wx_gender: gender,
+      wx_language: language,
+      wx_nickName: nickName,
+      wx_province: province,
+      openid
+    });
+    res.resSuccess(result, '更新微信用户信息成功');
+  } catch (err) {
+    res.resError(err);
+  }
+});
+
 module.exports = router;

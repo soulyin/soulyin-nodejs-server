@@ -9,7 +9,7 @@ const res = require('./res');
 
 module.exports = function(sessionStore) {
   return async function(req, res, next) {
-    if (req.path.indexOf('/wx') !== -1) {
+    if (req.path.indexOf('login') !== -1) {
       return next();
     }
     const sid = req.session.id;
@@ -17,8 +17,8 @@ module.exports = function(sessionStore) {
       if (err) {
         return res.resError(err);
       }
-      if (!session) {
-        return res.resError('无权限访问');
+      if (session) {
+        req.sid = sid;
       }
       next();
     });

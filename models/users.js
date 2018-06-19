@@ -58,6 +58,18 @@ exports.findUserByOpenid = async openid => {
   }
 };
 
+// 查找用户（id）
+exports.findUserById = async id => {
+  try {
+    const userInfo = await DB.instance('w').findOne(users, {
+      id
+    });
+    return userInfo;
+  } catch (err) {
+    throw err;
+  }
+};
+
 // 更新用户微信登录生成的 skey
 exports.updateUserSkey = async (wx_skey, openid) => {
   try {

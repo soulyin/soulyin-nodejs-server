@@ -11,7 +11,7 @@ const authWeb = require('./middleware/authWeb');
 const session = require('express-session');
 const mysql = require('mysql');
 const MySQLStore = require('express-mysql-session')(session);
-
+const authApp = require('./middleware/authApp');
 
 const app = express();
 let cache = apicache.middleware;
@@ -52,6 +52,7 @@ app.use(function(req, res, next) {
   next();
 });
 
+// session
 const options = {
   host: '122.152.227.45',
   port: '3306',
@@ -59,8 +60,6 @@ const options = {
   password: 'souyin2018@2018',
   database: 'soulyin_test'
 };
-
-// session
 const sessionStore = new MySQLStore(options);
 app.use(
   session({
@@ -78,8 +77,25 @@ app.use('/song', require('./controllers/song'));
 // 验证微信 session
 app.use(authWx());
 
+// 验证 app 端的 token
+app.use(authWeb(authApp.init));
+
 // 验证网页端 session
 app.use(authWeb(sessionStore));
+
+// 验证是否有权限访问资源
+app.use((req, res, next) => {
+  if (
+    req.openid ||
+    req.sid ||
+    req._authInfo ||
+    req.path.indexOf('login') !== -1 ||
+    req.path.indexOf('register') !== -1
+  ) {
+    return next();
+  }
+  res.resError('无权限');
+});
 
 // 用户相关路由
 app.use('/sy', require('./controllers/users'));

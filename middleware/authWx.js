@@ -9,9 +9,8 @@ const res = require('./res');
 
 module.exports = function() {
   return async function(req, res, next) {
-    if (req.originalUrl.indexOf('/wx/login') !== -1) {
-      next();
-      return;
+    if (req.path.indexOf('login') !== -1) {
+      return next();
     }
     let skey = '';
     if (req.method === 'GET') {
@@ -30,9 +29,6 @@ module.exports = function() {
         if (userInfo.length > 0 && userInfo[0].wx_skey === skey) {
           req.openid = userInfo[0].openid;
           next();
-          // 验证不通过
-        } else {
-          res.resError('微信 session 验证失败');
         }
       } catch (err) {
         res.resError(err.message);

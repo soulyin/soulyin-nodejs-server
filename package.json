@@ -29,6 +29,7 @@
     "express-session": "^1.15.6",
     "express-validator": "^5.2.0",
     "helmet": "^3.12.1",
+    "jsonwebtoken": "^8.3.0",
     "mysql": "github:mysqljs/mysql",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
