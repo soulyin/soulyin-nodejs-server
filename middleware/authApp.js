@@ -17,7 +17,7 @@ const authApp = {
       return next();
     }
     let token;
-    token = req.query.auth || req.body.auth;
+    token = req.query.token || req.body.token;
     req._authInfo = authApp.verify(token);
     // 将用户的信息挂载到req对象下面
     if (_authInfo) {

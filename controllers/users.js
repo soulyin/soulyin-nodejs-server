@@ -10,6 +10,7 @@ const UsersModel = require('../models/users');
 const crypto = require('crypto');
 const rp = require('request-promise');
 const secret = require('../config/secret');
+const authApp = require('../middleware/authApp');
 
 const {
   check,
@@ -69,7 +70,7 @@ router.post(
   }
 );
 
-// 登录（web端）
+// 登录（app 端 web端）
 router.post(
   '/web/login',
   [
@@ -79,20 +80,28 @@ router.post(
   async (req, res) => {
     try {
       validationResult(req).throw();
-      const { username, password } = req.body;
+      const { username, password, device } = req.body;
       const userInfo = await UsersModel.findUser(username, password);
       if (userInfo.length === 0) {
         return res.resError('用户名或密码错误');
       } else {
         delete userInfo[0].password;
-        // 生成 session
-        req.session.regenerate(function(err) {
-          if (err) {
-            return res.resError(err);
-          }
-          req.session.loginUser = userInfo[0].username;
-          return res.resSuccess(userInfo, '登录成功');
-        });
+        if (device && device === 'web') {
+          // web：生成 session
+          req.session.regenerate(function(err) {
+            if (err) {
+              return res.resError(err);
+            }
+            req.session.loginUser = userInfo[0].username;
+            return res.resSuccess({ userInfo: userInfo[0] }, '登录成功');
+          });
+          // app：生成 token
+        } else if (device && device === 'app') {
+          const token = authApp.generateToken(userInfo[0].id);
+          return res.resSuccess({ token, userInfo: userInfo[0] });
+        } else {
+          return res.resError("请传入 'app' 或 'web' 参数");
+        }
       }
     } catch (err) {
       return res.resError(err);
