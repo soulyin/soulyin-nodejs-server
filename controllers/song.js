@@ -21,7 +21,7 @@ router.get('/lyric', async (req, res) => {
       data,
       cookie
     );
-    res.resSuccess(lyric, '获取歌词成功');
+    res.resSuccess({ lyric }, '获取歌词成功');
   } catch (err) {
     res.resError(err);
   }
@@ -45,7 +45,7 @@ router.get('/music/url', async (req, res) => {
       data,
       cookie
     );
-    res.resSuccess(songUrl, '获取歌曲地址成功');
+    res.resSuccess({ songUrl }, '获取歌曲地址成功');
   } catch (err) {
     res.resError(err);
   }
@@ -73,7 +73,7 @@ router.get('/search', async (req, res) => {
       data,
       cookie
     );
-    res.resSuccess(list, '搜索歌曲成功');
+    res.resSuccess({ list }, '搜索歌曲成功');
   } catch (err) {
     res.resError(err);
   }
