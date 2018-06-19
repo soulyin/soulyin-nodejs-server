@@ -63,7 +63,7 @@ router.post(
       validationResult(req).throw();
       const { username, password } = req.body;
       const userInfo = await UsersModel.addUser(username, password);
-      res.resSuccess(userInfo, '注册成功');
+      res.resSuccess({ userInfo }, '注册成功');
     } catch (err) {
       return res.resError(err);
     }
@@ -72,7 +72,7 @@ router.post(
 
 // 登录（app 端 web端）
 router.post(
-  '/web/login',
+  '/login',
   [
     check('username', '用户名必须为2~10个字符').isLength({ min: 2, max: 10 }),
     check('password', '密码必须为6~16个字符').isLength({ min: 6, max: 16 })
