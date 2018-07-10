@@ -55,7 +55,7 @@ async function getSessionKey(code, appid, appSecret) {
 router.post(
   '/register',
   [
-    check('username', '用户名必须为2~4个字符').isLength({ min: 2, max: 4 }),
+    check('username', '用户名必须为2~4个字符').isLength({ min: 2, max: 10 }),
     check('password', '密码必须为6~16个字符').isLength({ min: 6, max: 16 })
   ],
   async (req, res) => {
